@@ -54,12 +54,10 @@
 			out.println("<title>Link Checker Live check.</title>");
 			out.println("</head>");
 			out.println("<body>");
-			
 
 			while (i.hasNext()) {
 				FileItem fi = (FileItem) i.next();
-				
-			
+
 				if (!fi.isFormField()) {
 					// Get the uploaded file parameters
 					String fieldName = fi.getFieldName();
@@ -168,6 +166,14 @@
 									.accept(MediaType.APPLICATION_JSON)
 									.get(String.class)
 									+ "<br>");
+
+							String realPath = getServletContext().getContextPath();
+
+							out.println("<a href=" + realPath
+									+ "/results/" + folder.getName()
+									+ "_LinkCheck_Results.txt >"
+									+ folder.getName()
+									+ " Link Checking Results" + "</a>");
 							FileUtils.deleteDirectory(folder);
 						} catch (IOException ex) {
 							ex.printStackTrace();

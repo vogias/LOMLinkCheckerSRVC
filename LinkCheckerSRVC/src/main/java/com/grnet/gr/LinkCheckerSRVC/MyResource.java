@@ -9,15 +9,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 @Path("/linkchecker")
 public class MyResource {
+
+	@Context
+	private ServletContext context;
 
 	private Properties getProps() throws IOException {
 		String filename = "configure.properties";
@@ -53,13 +58,14 @@ public class MyResource {
 
 		Report report = linkchecker.getReport();
 
-		File res = new File("LinkCheck_results.txt");
+		File res = new File(context.getRealPath("")+"/results/"+repo + "_LinkCheck_Results.txt");
 
 		FileWriter fw = new FileWriter(res.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 		bw.write(report.toString());
 		bw.close();
 
+		
 		return report;
 	}
 
