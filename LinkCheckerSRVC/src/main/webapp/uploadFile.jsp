@@ -172,9 +172,9 @@
 							String realPath = getServletContext()
 									.getContextPath();
 
-							out.println("<img src='"
+							out.println("<p><img src='"
 									+ realPath
-									+ "/images/TXT.png' height='30' width='30'>");
+									+ "/images/note.png' height='30' width='30'>");
 							out.println("<a href=" + realPath
 									+ "/results/" + folder.getName()
 									+ "_LinkCheck_Results.txt >"
