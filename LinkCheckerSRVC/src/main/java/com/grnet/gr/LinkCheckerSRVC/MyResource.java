@@ -58,14 +58,16 @@ public class MyResource {
 
 		Report report = linkchecker.getReport();
 
-		File res = new File(context.getRealPath("")+"/results/"+repo + "_LinkCheck_Results.txt");
+		File resFolder = new File(context.getRealPath("") + "/results");
+		resFolder.mkdir();
+
+		File res = new File(resFolder, repo + "_LinkCheck_Results.txt");
 
 		FileWriter fw = new FileWriter(res.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 		bw.write(report.toString());
 		bw.close();
 
-		
 		return report;
 	}
 
