@@ -17,6 +17,8 @@
 <%@ page import="org.apache.commons.io.output.*"%>
 <%@page import="org.apache.commons.fileupload.disk.DiskFileItem"%>
 
+
+
 <%
 	File file;
 	int maxFileSize = 5000 * 1024;
@@ -167,13 +169,18 @@
 									.get(String.class)
 									+ "<br>");
 
-							String realPath = getServletContext().getContextPath();
+							String realPath = getServletContext()
+									.getContextPath();
 
+							out.println("<img src='"
+									+ realPath
+									+ "/images/TXT.png' height='30' width='30'>");
 							out.println("<a href=" + realPath
 									+ "/results/" + folder.getName()
 									+ "_LinkCheck_Results.txt >"
 									+ folder.getName()
-									+ " Link Checking Results" + "</a>");
+									+ " Link Checking Results"
+									+ "</a></img>");
 							FileUtils.deleteDirectory(folder);
 						} catch (IOException ex) {
 							ex.printStackTrace();
