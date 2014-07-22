@@ -1,8 +1,10 @@
 package com.grnet.gr.LinkCheckerSRVC;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,4 +110,53 @@ public class MyResource {
 
 	}
 
+	@GET
+	@Path("/getResults")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getResults(@QueryParam("repo") String repo)
+			throws FileNotFoundException {
+
+		if (repo == null)
+			return "";
+		else {
+			File resFolder = new File(context.getRealPath("") + "/results");
+
+			File[] listFiles = resFolder.listFiles();
+
+			for (File file : listFiles) {
+
+				if (file.getName().contains(repo)) {
+					StringBuffer buffer = new StringBuffer();
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					String line;
+					try {
+						while ((line = br.readLine()) != null) {
+							buffer.append(line+"\n");
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return "";
+
+					} finally {
+						try {
+							if (br != null) {
+								br.close();
+								return buffer.toString();
+							}
+
+						} catch (IOException ex) {
+							ex.printStackTrace();
+							return "";
+						}
+					}
+
+				} else
+					continue;
+			}
+
+			return "";
+		}
+
+	}
 }
