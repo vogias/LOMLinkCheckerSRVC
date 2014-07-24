@@ -74,6 +74,35 @@ public class MyResource {
 	}
 
 	@GET
+	@Path("/getDReport")
+	@Produces(MediaType.APPLICATION_JSON)
+	public DReport getDReport(
+			@DefaultValue("COSMOS") @QueryParam("repo") String repo)
+			throws IOException {
+
+		lom_linkchecker linkchecker = new lom_linkchecker(this.getProps());
+
+		linkchecker.checkLink(getProps().getProperty(Constants.folderPath)
+				+ File.separator + repo,
+				getProps().getProperty(Constants.badfolderPath));
+
+		// Report report = linkchecker.getReport();
+		DReport dReport = linkchecker.getDReport();
+
+		File resFolder = new File(context.getRealPath("") + "/results");
+		resFolder.mkdir();
+
+		File res = new File(resFolder, repo + "_LinkCheck_Results.txt");
+
+		FileWriter fw = new FileWriter(res.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write(dReport.toString());
+		bw.close();
+
+		return dReport;
+	}
+
+	@GET
 	@Path("/checkLink")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String checkLink(@QueryParam("link") String link) throws IOException {
@@ -131,7 +160,7 @@ public class MyResource {
 					String line;
 					try {
 						while ((line = br.readLine()) != null) {
-							buffer.append(line+"\n");
+							buffer.append(line + "\n");
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

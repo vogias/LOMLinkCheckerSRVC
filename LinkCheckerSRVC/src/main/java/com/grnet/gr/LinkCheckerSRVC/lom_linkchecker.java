@@ -34,10 +34,12 @@ public class lom_linkchecker {
 	private int recordsNumber = 0;
 	Properties props;
 	Report report;
+	DReport dReport;
 
 	public lom_linkchecker(Properties props) {
 
 		this.props = props;
+
 	}
 
 	// // ------------ Get Connection from MySQL --------------------------
@@ -201,6 +203,18 @@ public class lom_linkchecker {
 	// }// end try
 	// }
 
+	public synchronized void addLiveLinkReport() {
+
+	}
+
+	public synchronized void addDeadLinkReport() {
+
+	}
+
+	public synchronized void addNWFLinkReport() {
+
+	}
+
 	public synchronized void raiseNotWellFormed() {
 		notWellFormed++;
 	}
@@ -301,6 +315,7 @@ public class lom_linkchecker {
 
 		int threadPoolSize = 1;
 		report = new Report();
+		dReport = new DReport();
 
 		try {
 
@@ -330,6 +345,7 @@ public class lom_linkchecker {
 
 			System.out.println("processing " + fileNumber + " files ...");
 			String provider = folder.getName();
+			dReport.setRepository(provider);
 
 			int availableProcessors = Runtime.getRuntime()
 					.availableProcessors();
@@ -377,6 +393,10 @@ public class lom_linkchecker {
 
 	public Report getReport() {
 		return report;
+	}
+
+	public DReport getDReport() {
+		return dReport;
 	}
 
 	public synchronized void raiseRecordsNumber() {
