@@ -77,7 +77,7 @@ public class WorkerFS implements Runnable {
 				System.out.println("No metadata element found!");
 
 				ods_linkchecker.raiseNotWellFormed();
-				ods_linkchecker.addNWFLinkReport();
+				ods_linkchecker.addNWFLinkReport(name);
 
 				// -------------------------Move files
 				// ----------------------------------
@@ -113,7 +113,7 @@ public class WorkerFS implements Runnable {
 					System.out
 							.println("----------------------------------------------------");
 					ods_linkchecker.raiseDeadLinks();
-					ods_linkchecker.addDeadLinkReport();
+					ods_linkchecker.addDeadLinkReport(name);
 
 					// -------------------------Move files
 					// ----------------------------------
@@ -148,7 +148,7 @@ public class WorkerFS implements Runnable {
 					System.out
 							.println("--------------------------------------------------------");
 					ods_linkchecker.raiseLiveLinks();
-					ods_linkchecker.addLiveLinkReport();
+					ods_linkchecker.addLiveLinkReport(name);
 
 					logString.append(" " + "Livelink");
 					logString.append(" " + code);

@@ -203,16 +203,16 @@ public class lom_linkchecker {
 	// }// end try
 	// }
 
-	public synchronized void addLiveLinkReport() {
-
+	public synchronized void addLiveLinkReport(String id) {
+		dReport.addLive(id);
 	}
 
-	public synchronized void addDeadLinkReport() {
-
+	public synchronized void addDeadLinkReport(String id) {
+		dReport.addBroken(id);
 	}
 
-	public synchronized void addNWFLinkReport() {
-
+	public synchronized void addNWFLinkReport(String id) {
+		dReport.addNotWellFormed(id);
 	}
 
 	public synchronized void raiseNotWellFormed() {
