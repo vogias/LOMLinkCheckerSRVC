@@ -346,6 +346,7 @@ public class lom_linkchecker {
 			System.out.println("processing " + fileNumber + " files ...");
 			String provider = folder.getName();
 			dReport.setRepository(provider);
+			report.setRepo(provider);
 
 			int availableProcessors = Runtime.getRuntime()
 					.availableProcessors();

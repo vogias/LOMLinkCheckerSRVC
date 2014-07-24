@@ -20,6 +20,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 @Path("/linkchecker")
 public class MyResource {
 
@@ -59,47 +62,56 @@ public class MyResource {
 				getProps().getProperty(Constants.badfolderPath));
 
 		Report report = linkchecker.getReport();
-
-		File resFolder = new File(context.getRealPath("") + "/results");
-		resFolder.mkdir();
-
-		File res = new File(resFolder, repo + "_LinkCheck_Results.txt");
-
-		FileWriter fw = new FileWriter(res.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(report.toString());
-		bw.close();
-
-		return report;
-	}
-
-	@GET
-	@Path("/getDReport")
-	@Produces(MediaType.APPLICATION_JSON)
-	public DReport getDReport(
-			@DefaultValue("COSMOS") @QueryParam("repo") String repo)
-			throws IOException {
-
-		lom_linkchecker linkchecker = new lom_linkchecker(this.getProps());
-
-		linkchecker.checkLink(getProps().getProperty(Constants.folderPath)
-				+ File.separator + repo,
-				getProps().getProperty(Constants.badfolderPath));
-
-		// Report report = linkchecker.getReport();
 		DReport dReport = linkchecker.getDReport();
 
 		File resFolder = new File(context.getRealPath("") + "/results");
 		resFolder.mkdir();
 
 		File res = new File(resFolder, repo + "_LinkCheck_Results.txt");
+		File Dres = new File(resFolder, repo + "_LinkCheck_DetailedResults.txt");
 
 		FileWriter fw = new FileWriter(res.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(dReport.toString());
-		bw.close();
 
-		return dReport;
+		JSONObject jsonObject = new JSONObject();
+
+		try {
+			jsonObject.put("Date", report.getDate());
+			jsonObject.put("Repository", report.getRepo());
+			jsonObject.put("Duration", report.getDuration());
+			jsonObject.put("NumOfRecords", report.getNumberofcheckedrecords());
+			jsonObject.put("LiveLinks", report.getHealthy());
+			jsonObject.put("DeadLinks", report.getBrokenlinks());
+			jsonObject.put("NWFLinks", report.getNotwellformed());
+			
+
+			bw.write(jsonObject.toString());
+			bw.close();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		FileWriter fdw = new FileWriter(Dres.getAbsoluteFile());
+		BufferedWriter bdw = new BufferedWriter(fdw);
+
+		
+		JSONObject jsonObject2 = new JSONObject();
+		try {
+			jsonObject2.put("Date", dReport.getDate());
+			jsonObject2.put("Repository", dReport.getRepository());
+			jsonObject2.put("LiveLinks", dReport.getLive());
+			jsonObject2.put("DeadLinks", dReport.getBroken());
+			jsonObject2.put("NWFLinks", dReport.getNotWellFormed());
+
+			bdw.write(jsonObject2.toString());
+			bdw.close();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return report;
 	}
 
 	@GET
@@ -154,7 +166,56 @@ public class MyResource {
 
 			for (File file : listFiles) {
 
-				if (file.getName().contains(repo)) {
+				if (file.getName().contains(repo+"_LinkCheck_Results")) {
+					StringBuffer buffer = new StringBuffer();
+					BufferedReader br = new BufferedReader(new FileReader(file));
+					String line;
+					try {
+						while ((line = br.readLine()) != null) {
+							buffer.append(line + "\n");
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return "";
+
+					} finally {
+						try {
+							if (br != null) {
+								br.close();
+								return buffer.toString();
+							}
+
+						} catch (IOException ex) {
+							ex.printStackTrace();
+							return "";
+						}
+					}
+
+				} else
+					continue;
+			}
+
+			return "";
+		}
+
+	}
+	@GET
+	@Path("/getDetailedResults")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getDetailedResults(@QueryParam("repo") String repo)
+			throws FileNotFoundException {
+
+		if (repo == null)
+			return "";
+		else {
+			File resFolder = new File(context.getRealPath("") + "/results");
+
+			File[] listFiles = resFolder.listFiles();
+
+			for (File file : listFiles) {
+
+				if (file.getName().contains(repo+"_LinkCheck_DetailedResults")) {
 					StringBuffer buffer = new StringBuffer();
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					String line;

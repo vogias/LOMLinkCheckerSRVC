@@ -24,10 +24,25 @@ public class Report {
 	int healthy = 0;
 	String date;
 	Vector<String> problems;
+	String repo;
 
 	public Report() {
 		problems = new Vector<String>();
 		date = new Date().toGMTString();
+	}
+
+	/**
+	 * @return the repo
+	 */
+	public String getRepo() {
+		return repo;
+	}
+
+	/**
+	 * @param repo the repo to set
+	 */
+	public void setRepo(String repo) {
+		this.repo = repo;
 	}
 
 	/**
