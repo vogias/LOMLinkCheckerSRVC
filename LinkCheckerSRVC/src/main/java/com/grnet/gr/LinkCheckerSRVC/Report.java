@@ -39,7 +39,8 @@ public class Report {
 	}
 
 	/**
-	 * @param repo the repo to set
+	 * @param repo
+	 *            the repo to set
 	 */
 	public void setRepo(String repo) {
 		this.repo = repo;
@@ -155,16 +156,6 @@ public class Report {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-
-		// return new StringBuffer("Broken Links: ")
-		// .append(getBrokenlinks() + "\n").append("Link Check Date: ")
-		// .append(getDate() + "\n").append("Duration(ms): ")
-		// .append(getDuration() + "\n").append("Live Links: ")
-		// .append(getHealthy() + "\n").append("Badly Formed Links: ")
-		// .append(getNotwellformed() + "\n")
-		// .append("Records been checked: ")
-		// .append(getNumberofcheckedrecords() + "\n").toString();
 
 		return new StringBuffer("Link Check Date: ").append(getDate() + "\n")
 				.append("Duration(ms): ").append(getDuration() + "\n")
