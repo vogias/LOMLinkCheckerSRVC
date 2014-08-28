@@ -48,14 +48,14 @@
 							<locations>com.github.kongchen.swagger.sample.wordnik.resource</locations>
 
 							<apiVersion>v1</apiVersion>
-							<basePath>http://localhost:8080/agro-linkchcker-srvc/webresources</basePath>
+							<basePath>http://localhost:8080/LinkCheckerSRVC/webresources</basePath>
 							<!--Required parameters END -->
 
 							<!--Optional parameters BEGIN -->
 							<!---General parameters BEGIN -->
 							<apiInfo>
-								<title>AKIF Link Checker API documentatione</title>
-								<description>This is a graphical documentation of AKIF Link
+								<title>LOM/DC Link Checker API documentation</title>
+								<description>This is a graphical documentation of LOM/DC Link
 									Checker</description>
 								<termsOfServiceUrl>http://www.github.com/kongchen/swagger-maven-plugin</termsOfServiceUrl>
 								<contact>vogias#grnet$gr</contact>
