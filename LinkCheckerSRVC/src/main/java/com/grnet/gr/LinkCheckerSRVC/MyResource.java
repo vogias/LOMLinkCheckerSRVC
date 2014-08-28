@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,7 +22,12 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+
 @Path("/linkchecker")
+@Api(value = "/linkchecker", description = "LOM/DC based Link Checker")
 public class MyResource {
 
 	@Context
@@ -50,9 +54,10 @@ public class MyResource {
 
 	@GET
 	@Path("/checkRepo")
+	@ApiOperation(value = "Link Check a specific repository", notes = "In order to check a repository list first all available repositories and choose one.", response = Report.class)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Report checkRepo(
-			@DefaultValue("COSMOS") @QueryParam("repo") String repo)
+			@ApiParam(value = "Repository Name", required = true) @QueryParam("repo") String repo)
 			throws IOException {
 
 		lom_linkchecker linkchecker = new lom_linkchecker(this.getProps());
@@ -83,7 +88,6 @@ public class MyResource {
 			jsonObject.put("LiveLinks", report.getHealthy());
 			jsonObject.put("DeadLinks", report.getBrokenlinks());
 			jsonObject.put("NWFLinks", report.getNotwellformed());
-			
 
 			bw.write(jsonObject.toString());
 			bw.close();
@@ -95,7 +99,6 @@ public class MyResource {
 		FileWriter fdw = new FileWriter(Dres.getAbsoluteFile());
 		BufferedWriter bdw = new BufferedWriter(fdw);
 
-		
 		JSONObject jsonObject2 = new JSONObject();
 		try {
 			jsonObject2.put("Date", dReport.getDate());
@@ -116,8 +119,11 @@ public class MyResource {
 
 	@GET
 	@Path("/checkLink")
+	@ApiOperation(value = "Link Check a given link", notes = "Insert the desired link.")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String checkLink(@QueryParam("link") String link) throws IOException {
+	public String checkLink(
+			@ApiParam(value = "URL", required = true) @QueryParam("link") String link)
+			throws IOException {
 
 		try {
 			if (link.equals(""))
@@ -135,6 +141,7 @@ public class MyResource {
 
 	@GET
 	@Path("/listRepos")
+	@ApiOperation(value = "List all available repositories", response = Repos.class)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Repos list() throws FileNotFoundException, IOException {
 
@@ -153,8 +160,10 @@ public class MyResource {
 
 	@GET
 	@Path("/getResults")
+	@ApiOperation(value = "Get the link checking results for a specific repository", notes = "In order to get the general results for a specific repository,list first all already repositories and choose one.", response = Report.class)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getResults(@QueryParam("repo") String repo)
+	public String getResults(
+			@ApiParam(value = "Repository", required = true) @QueryParam("repo") String repo)
 			throws FileNotFoundException {
 
 		if (repo == null)
@@ -166,7 +175,7 @@ public class MyResource {
 
 			for (File file : listFiles) {
 
-				if (file.getName().contains(repo+"_LinkCheck_Results")) {
+				if (file.getName().contains(repo + "_LinkCheck_Results")) {
 					StringBuffer buffer = new StringBuffer();
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					String line;
@@ -200,10 +209,13 @@ public class MyResource {
 		}
 
 	}
+
 	@GET
 	@Path("/getDetailedResults")
+	@ApiOperation(value = "Get the a detailed version of the link checking results for a specific analyzed repository", notes = "In order to get the detailed results for a specific analyzed repository,list first all already repositories and choose one.", response = DReport.class)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getDetailedResults(@QueryParam("repo") String repo)
+	public String getDetailedResults(
+			@ApiParam(value = "Repository Name", required = true) @QueryParam("repo") String repo)
 			throws FileNotFoundException {
 
 		if (repo == null)
@@ -215,7 +227,8 @@ public class MyResource {
 
 			for (File file : listFiles) {
 
-				if (file.getName().contains(repo+"_LinkCheck_DetailedResults")) {
+				if (file.getName()
+						.contains(repo + "_LinkCheck_DetailedResults")) {
 					StringBuffer buffer = new StringBuffer();
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					String line;
